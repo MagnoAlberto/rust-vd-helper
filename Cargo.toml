@@ -1,0 +1,37 @@
+[package]
+name = "rust-vd-helper"
+version = "0.1.0"
+edition = "2021"
+authors = ["Magno"]
+description = "Indicador leve de Área de Trabalho Virtual para a bandeja do Windows em Rust (sem poluir o Alt+Tab)"
+
+[dependencies]
+# Acesso às APIs COM internas de Áreas de Trabalho Virtuais do Windows 10/11
+winvd = "0.0.49"
+
+# Criação e gerenciamento do ícone na bandeja do sistema (System Tray) e menu de contexto
+tray-icon = "0.19"
+
+# Rasterização de fontes TrueType/OpenType (.ttf / .otf) para desenhar o número no ícone
+ab_glyph = "0.2"
+
+# Serialização e desserialização do arquivo de configuração (config.toml)
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+
+# Crate oficial da Microsoft para chamadas à API nativa do Windows (Win32 Message Loop e Registro)
+[dependencies.windows-sys]
+version = "0.59"
+features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_Registry",
+    "Win32_System_Com",
+]
+
+[profile.release]
+opt-level = "z"     # Otimiza para menor tamanho de binário
+lto = true          # Link-Time Optimization
+codegen-units = 1   # Melhor otimização global
+panic = "abort"     # Remove código de unwinding de pânico para reduzir o .exe
+strip = true        # Remove símbolos de debug do executável final

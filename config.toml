@@ -1,0 +1,37 @@
+# ============================================================================
+# Configuração do Rust Virtual Desktop Helper
+# ============================================================================
+# Você pode editar este arquivo a qualquer momento e clicar com o botão direito
+# no ícone da bandeja -> "Recarregar Configuração" para aplicar na hora!
+
+# Nome do arquivo da fonte localizada em C:\Windows\Fonts\ ou caminho completo (.ttf / .otf)
+# Exemplos comuns no Windows:
+#   "seguisb.ttf"  -> Segoe UI Semibold (Padrão, ótima leitura em tamanhos pequenos)
+#   "segoeuib.ttf" -> Segoe UI Bold (Negrito)
+#   "segoeui.ttf"  -> Segoe UI Regular
+#   "arialbd.ttf"  -> Arial Bold
+#   "consolab.ttf" -> Consolas Bold (Monoespaçada)
+font_file = "seguisb.ttf"
+
+# Tamanho da fonte em pixels dentro de um canvas de 64x64.
+# Valores recomendados: entre 42.0 e 60.0 para 1 dígito.
+font_size = 54.0
+
+# Cor da fonte em formato Hexadecimal (#RRGGBB ou #RRGGBBAA)
+# Exemplos:
+#   "#FFFFFF" -> Branco
+#   "#00FFCC" -> Verde-água / Ciano
+#   "#FFD700" -> Amarelo Ouro
+#   "#FF5555" -> Vermelho claro
+font_color = "#FFFFFF"
+
+# Cor de fundo do ícone em formato Hexadecimal (#RRGGBBAA)
+# Use "#00000000" para fundo 100% transparente, ou ex: "#202020FF" para um quadrado escuro.
+background_color = "#00000000"
+
+# Deslocamento vertical (Y) e horizontal (X) em pixels para ajuste fino de centralização da fonte
+offset_x = 0
+offset_y = 0
+
+# Intervalo de verificação (polling fallback) em milissegundos
+poll_interval_ms = 200

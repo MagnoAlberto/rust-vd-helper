@@ -1,0 +1,16 @@
+# ============================================================================
+# Configuração do Compilador Cargo (.cargo/config.toml)
+# ============================================================================
+# Por padrão no Windows (target x86_64-pc-windows-msvc), o Rust faz linkagem
+# dinâmica com o C Runtime da Microsoft (vcruntime140.dll).
+#
+# Ao passarmos a flag `+crt-static` abaixo, instruímos o compilador `rustc` e
+# o linker da Microsoft (`link.exe`) a embutirem o C Runtime estaticamente
+# DENTRO do nosso arquivo `.exe`.
+#
+# Resultado: O binário final (`rust-vd-helper.exe`) torna-se 100% autônomo
+# (standalone) e rodará em qualquer instalação limpa do Windows 10/11 sem
+# exigir o pacote "Visual C++ Redistributable".
+
+[target.x86_64-pc-windows-msvc]
+# rustflags = ["-C", "target-feature=+crt-static"]

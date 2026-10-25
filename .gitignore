@@ -1,0 +1,27 @@
+#
+# Não ignore Cargo.lock: para um aplicativo executável, é recomendável versioná-lo para registrar as versões exatas das dependências. 
+# Também mantenha config.toml versionado se ele contiver os valores padrão do projeto, e não configurações pessoais ou segredos.
+#
+
+# Artefatos gerados pelo Cargo
+/target/
+
+# Executáveis e símbolos de depuração gerados
+*.exe
+*.pdb
+
+# Arquivos temporários e logs
+*.log
+*.tmp
+*.bak
+
+# Configurações locais de editores e IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
