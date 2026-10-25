@@ -128,13 +128,13 @@ Em vez de continuar presumindo que a falha estava em uma assinatura COM específ
 - `HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VirtualDesktops\VirtualDesktopIDs`: sequência binária com os GUIDs dos desktops, na ordem usada para determinar o número exibido.
 - `HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\SessionInfo\1\VirtualDesktops\CurrentVirtualDesktop`: GUID binário do desktop ativo na sessão observada.
 
-Os dados fornecidos durante o diagnóstico mostraram que o GUID de `CurrentVirtualDesktop` correspondia a um dos GUIDs da lista `VirtualDesktopIDs`. A solução foi, então, ler os GUIDs binários do Registro, localizar o GUID atual na lista e converter sua posição de índice iniciado em zero para o número apresentado ao usuário, iniciado em um.
+Os dados fornecidos durante o diagnóstico mostraram que o GUID de `CurrentVirtualDesktop` correspondia a um dos GUIDs da lista `VirtualDesktopIDs`. A solução foi, então, ler os GUIDs binários do Registro, localizar o GUID atual na lista e converter sua posição de índice iniciado em zero para o número apresentado na tela, iniciado em `1`.
 
 ### Decisão final da rotina
 
 A implementação atual em `src/vd_win10.rs` tenta primeiro a leitura do Registro: obtém `VirtualDesktopIDs`, procura o `CurrentVirtualDesktop` — primeiro na chave direta e depois nas subchaves de `SessionInfo` — e encontra sua posição na lista. Se localizar a correspondência, usa o nome personalizado do desktop quando disponível; caso contrário, exibe `Área de Trabalho N`.
 
-Se a consulta ao Registro não retornar uma correspondência, o código mantém caminhos alternativos: a consulta COM implementada no módulo e, por fim, `winvd`. Esses fallbacks permanecem como alternativas, mas o sucesso observado no ambiente de teste veio da comparação dos dados do Registro. A leitura foi testada pelo usuário: após a alteração, o aplicativo passou a identificar o desktop atual, e a recarga das configurações também foi confirmada como funcional.
+Se a consulta ao Registro não retornar uma correspondência, o código mantém caminhos alternativos: a consulta COM implementada no módulo e, por fim, `winvd`. Esses fallbacks permanecem como alternativas, mas o sucesso observado no ambiente de teste veio da comparação dos dados do Registro. A leitura foi testada diversas vezes: após a alteração, o aplicativo passou a identificar o desktop atual, e a recarga das configurações também foi confirmada como funcional.
 
 > **Limites do que foi confirmado:** o teste bem-sucedido comprova o comportamento observado naquela instalação do Windows 10 22H2 e na sessão testada. Como as APIs COM e os detalhes do Registro usados para desktops virtuais não são uma interface pública estável, outras builds, sessões e versões do Windows devem ser testadas antes de afirmar compatibilidade universal. A rotina depende dos valores e da estrutura do Registro encontrados no sistema; mudanças do Windows podem exigir ajustes.
 
@@ -142,7 +142,7 @@ Se a consulta ao Registro não retornar uma correspondência, o código mantém 
 
 1. **Investigar antes de aprofundar o FFI (`src/vd_win10.rs`):** comparar os GUIDs disponíveis no Registro ajudou a substituir uma hipótese sobre COM por uma verificação observável. Em interoperabilidade com APIs internas, é útil separar o que foi medido do que é apenas uma explicação possível.
 
-2. **Configuração recarregável (`src/config.rs` e `src/main.rs`):** o usuário confirmou que editar e recarregar o `config.toml` funcionou como esperado. Isso permite ajustar fonte, tamanho e cores sem reiniciar o aplicativo.
+2. **Configuração recarregável (`src/config.rs` e `src/main.rs`):** Foi confirmado que editar e recarregar o `config.toml` funcionou como esperado. Isso permite ajustar fonte, tamanho e cores sem reiniciar o aplicativo.
 
 3. **Renderização sem desenhar texto via GDI (`src/icon_renderer.rs`):** `ab_glyph` rasteriza a fonte em um buffer RGBA usado na criação do ícone.
 
@@ -150,4 +150,4 @@ Se a consulta ao Registro não retornar uma correspondência, o código mantém 
 
 ### Observação sobre manutenção
 
-A solução principal de detecção já foi confirmada em uso pelo usuário, mas isso não equivale a uma garantia para todas as versões do Windows. Se a detecção falhar após uma atualização, o primeiro diagnóstico recomendado é comparar novamente `VirtualDesktopIDs` e `CurrentVirtualDesktop` antes e depois de trocar de desktop; em seguida, verificar se o GUID atual está presente na lista e se a ordem corresponde ao número esperado. Evite atribuir a falha a uma causa específica de COM ou do Windows sem evidências reproduzíveis.
+A solução principal de detecção já foi confirmada em uso diversas vezes, mas isso não equivale a uma garantia para todas as versões do Windows. Se a detecção falhar após uma atualização, o primeiro diagnóstico recomendado é comparar novamente `VirtualDesktopIDs` e `CurrentVirtualDesktop` antes e depois de trocar de desktop; em seguida, verificar se o GUID atual está presente na lista e se a ordem corresponde ao número esperado. Evite atribuir a falha a uma causa específica de COM ou do Windows sem evidências reproduzíveis.
